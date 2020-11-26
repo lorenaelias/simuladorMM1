@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
 import styles from './MainPage.module.css';
 import Chart from './components/Chart/Chart';
+import Table from './components/Table/Table';
 
 export default function MainPage() {
     const [tempoSim, setTempo] = useState('');
@@ -170,7 +171,12 @@ export default function MainPage() {
                     <div className={styles.chart3}><Chart />Gráfico</div>
                     <div className={styles.chart4}><Chart />Gráfico</div>
                 </div>
-                <div className={styles.tableContainer}>Tabela</div>
+                <div className={styles.tableContainer}>
+                    Tabela de Simulação
+                    <div className={styles.table}>
+                        <Table/>
+                    </div>
+                </div>
             </div>
             
             <div className={styles.footer}>

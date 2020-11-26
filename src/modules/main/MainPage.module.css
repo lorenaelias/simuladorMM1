@@ -1,5 +1,5 @@
 .gridContainer {
-    background-color: white;
+    background-color: #f8eee7;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 0.2fr 0.6fr 2.1fr 0.1fr;
@@ -21,7 +21,7 @@
     align-items: center;
     justify-content: center;
     align-content: center;
-    background: #7700a6;
+    background: #94618e;
     color:#defe47;
     font-weight: 700;
     font-size: x-large;
@@ -59,12 +59,13 @@ label {
     margin-left: 15px;
     display: inline-block;
     width: 220px;
+    color: #0e0b16;
 }
 
 input, select {
     background-color: white;
-    border: 2px solid #fe00fe;
-    border-radius: 4px;
+    border: 2px solid #defe47;
+    border-radius: 5px;
 
     width: 50%;
     padding: 15px 20px;
@@ -78,8 +79,8 @@ input[type="submit"] {
     margin-top: 20px;
     display: flex;
 
-    background-color: #7700a6;
-    color: white;
+    background-color: #94618e;
+    color: #e7dfdd;
     padding: 12px 20px;
     border: none;
     border-radius: 4px;
@@ -88,7 +89,8 @@ input[type="submit"] {
 }
   
 input[type=submit]:hover {
-    background-color: #0016ee;
+    background-color: #defe47;
+    color: black;
 }
 
 .labelSimulacao {
@@ -134,13 +136,13 @@ input[type=submit]:hover {
     grid-area: charts;
 }
 
-.chart1, .chart2, .chart3, .chart4, .tableContainer {
+.chart1, .chart2, .chart3, .chart4 {
     padding: 1rem;
     z-index: 1;
     box-sizing: border-box;
     border-radius: 1rem;
-    background-color: rgba(240, 240, 250, 0.75);
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    /* background-color: rgba(240, 240, 250, 0.75);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25); */
 }
 
 .chart1 {
@@ -161,6 +163,13 @@ input[type=submit]:hover {
 
 .tableContainer {
     grid-area: table;
+    padding: 1rem;
+    margin-top: 5rem;
+    font-size: x-large;
+}
+
+.table {
+    margin-top: 1rem;
 }
 
 .footer {
@@ -172,7 +181,7 @@ input[type=submit]:hover {
     align-items: center;
     justify-content: center;
     align-content: center;
-    background: #7700a6;
+    background: #94618e;
     color:#defe47;
     font-weight: 700;
     font-size: medium;
