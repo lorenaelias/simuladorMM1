@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
 import styles from './MainPage.module.css';
 import Chart from './components/Chart/Chart';
-import Table from './components/Table/Table';
+import Tabela from './components/Table/Table';
+import { DataGrid } from '@material-ui/data-grid';
 
 export default function MainPage() {
     const [tempoSim, setTempo] = useState(0);
@@ -15,6 +16,8 @@ export default function MainPage() {
     const [ts, setTS] = useState(0);
     const [mediaTS, setMediaTS] = useState('');
     const [varianciaTS, setVarianciaTS] = useState('');
+
+    const [dados, setDados] = useState([]);
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -69,7 +72,7 @@ export default function MainPage() {
                     tl = tc-tfs_antes
                 }
             }
-            tabela.push([experimento, tecint, tc, tf, tsint, tis, tfs, tcs, tl])
+            tabela.push({id: experimento, tecint, tc, tf, tsint, tis, tfs, tcs, tl})
 
             tfs_antes = tfs
             tc_antes = tc
@@ -78,6 +81,8 @@ export default function MainPage() {
             experimento = experimento + 1
 
         }
+
+        setDados(tabela)
 
         console.log(tabela)
         // alert('Acho que vou ficar aqui mesmo');
@@ -260,15 +265,31 @@ export default function MainPage() {
 
             <div className={styles.statistics}>
                 <div className={styles.charts}>
-                    <div className={styles.chart1}>Gráfico<Chart /></div>
-                    <div className={styles.chart2}>Gráfico<Chart /></div>
-                    <div className={styles.chart3}>Gráfico<Chart /></div>
-                    <div className={styles.chart4}>Gráfico<Chart /></div>
+                    <div className={styles.chart1}>Gráfico<Chart data={dados}/></div>
+                    <div className={styles.chart2}>Gráfico<Chart data={dados}/></div>
+                    <div className={styles.chart3}>Gráfico<Chart data={dados}/></div>
+                    <div className={styles.chart4}>Gráfico<Chart data={dados}/></div>
                 </div>
                 <div className={styles.tableContainer}>
                     Tabela de Simulação
                     <div className={styles.table}>
-                        <Table/>
+                        <div className={styles.tableContainerGrid}>
+                            <DataGrid 
+                            rows={dados} 
+                            columns={[
+                                { field: 'id', headerName: 'Experimento', width: 120 },
+                                { field: 'tecint', headerName: 'Tempo entre chegadas', width: 150 },
+                                { field: 'tc', headerName: 'Tempo de chegada no relogio', width: 150 },
+                                { field: 'tf', headerName: 'Tempo de fila', width: 150 },
+                                { field: 'tsint', headerName: 'Tempo de serviço', width: 150 },
+                                { field: 'tis', headerName: 'Tempo inicial do serviço no relogio', width: 150 },
+                                { field: 'tfs', headerName: 'Tempo final do serviço no relogio', width: 150 },
+                                { field: 'tcs', headerName: 'Tempo do cliente no sistema', width: 150 },
+                                { field: 'tl', headerName: 'Tempo livre do operador', width: 150 },
+                            ]}
+                            headerHeight={100}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
