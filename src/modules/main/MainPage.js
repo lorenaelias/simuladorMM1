@@ -1,21 +1,27 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './MainPage.module.css';
-import Chart from './components/Chart/Chart';
-import Tabela from './components/Table/Table';
 import { DataGrid } from '@material-ui/data-grid';
+import Chart from 'react-apexcharts';
+import { barOptions } from './chart-options';
 
 export default function MainPage() {
     const [tempoSim, setTempo] = useState(0);
 
     const [tipoTec, setTipoTEC] = useState('');
     const [tec, setTEC] = useState(0);
-    const [mediaTEC, setMediaTEC] = useState('');
-    const [varianciaTEC, setVarianciaTEC] = useState('');
+    const [mediaTEC, setMediaTEC] = useState(0);
+    const [varianciaTEC, setVarianciaTEC] = useState(0);
 
     const [tipoTs, setTipoTS] = useState('');
     const [ts, setTS] = useState(0);
-    const [mediaTS, setMediaTS] = useState('');
-    const [varianciaTS, setVarianciaTS] = useState('');
+    const [mediaTS, setMediaTS] = useState(0);
+    const [varianciaTS, setVarianciaTS] = useState(0);
+
+    const [temposMediosNafila, setTemposMediosNaFila] = useState([]);
+    const [temposMediosDeServico, setTemposMediosDeServico] = useState([]);
+    const [probabilidadesDeOperadoresLivre, setProbabilidadesDeOperadoresLivre] = useState([]);
+    const [tempoMedioNoSistema, setTempoMedioNoSistema] = useState([]);
+    const [numeroExperimentos, setNumeroExperimentos] = useState(0);
 
     const [dados, setDados] = useState([]);
 
@@ -23,69 +29,86 @@ export default function MainPage() {
         event.preventDefault();
 
         let tabela = []
-        let tc = 0, tf = 0, tis = 0, tfs = 0, tcs = 0, tl = 0, tc_antes = 0, tfs_antes = 0
+        let tc = 0.0, tf = 0.0, tis = 0.0, tfs = 0.0, tcs = 0.0, tl = 0.0, tc_antes = 0.0, tfs_antes = 0.0
         let experimento = 1
-        let temposimulacao = parseInt(tempoSim)
-        let tecint = parseInt(tec)
-        let tsint = parseInt(ts)
+        let temposimulacao = parseFloat(tempoSim)
+        let tecint = parseFloat(tec)
+        let tsint = parseFloat(ts)
+        let tmfila = []
+        let tmservico = []
+        let problivre = []
+        let tmsistema = []
+        let i = 0
 
-        for( let i = 0; i < temposimulacao ; i++ ){
-            // if ( tipoTec === "deterministico" ) {
-            //     tec = tec
-            // } else if ( tipoTec === "normal" ) {
-            //     tec = ?
-            // } else { //exponencial
-            //     tec = ?
-            // }
-
-            // if ( tipoTs === "deterministico" ) {
-            //     ts = ts
-            // } else if ( tipoTs === "normal" ) {
-            //     ts = ?
-            // } else { // exponencial
-            //     ts = ?
-            // }
+        while( i < parseFloat(temposimulacao) ){
+            if ( tipoTec === "exponencial" ) {
+                tecint = parseFloat(exponencialRAND(1 / mediaTEC))
+            } else if ( tipoTec === "normal" ) {
+                tecint = parseFloat(normalRAND(mediaTEC, varianciaTEC))
+            }
+            if ( tipoTs === "exponencial" ) {
+                tsint = parseFloat(exponencialRAND(1 / mediaTS))
+            } else if ( tipoTs === "normal" ) {
+                tsint = parseFloat(normalRAND(mediaTS, varianciaTS))
+            } 
 
             if ( i === 0 ) {
                 tc = tecint
-                tf = 0
+                tf = 0.0
                 tis = tecint
-                tfs = tecint+tsint
-                tcs = tfs-tis
+                tfs = parseFloat(tecint)+parseFloat(tsint)
+                tcs = parseFloat(tfs)-parseFloat(tis)
                 tl = tecint
             } else {
-                tc = tc_antes+tecint
+                tc = parseFloat(tc_antes)+parseFloat(tecint)
 
                 if ( tfs_antes > tc ) {
-                    tf = tfs_antes-tc
+                    tf = parseFloat(tfs_antes)-parseFloat(tc)
                 } else {
-                    tf = 0
+                    tf = 0.0
                 }
-                tis = tc+tf
-                tfs = tis+tsint
+                tis = parseFloat(tc)+parseFloat(tf)
+                tfs = parseFloat(tis)+parseFloat(tsint)
                 
-                tcs = tfs-tis+tf
+                tcs = parseFloat(tfs)-parseFloat(tis)+parseFloat(tf)
 
-                if ( tf > 0 ) {
-                    tl = 0
+                if ( tf > 0.0 ) {
+                    tl = 0.0
                 } else {
-                    tl = tc-tfs_antes
+                    tl = parseFloat(tc)-parseFloat(tfs_antes)
                 }
             }
+            tfs_antes = parseFloat(tfs)
+            tc_antes = parseFloat(tc)
+            tmfila.push(parseFloat(tf).toFixed(2))
+            tmservico.push(parseFloat(tsint).toFixed(2))
+            problivre.push(parseFloat(tl).toFixed(2))
+            tmsistema.push(parseFloat(tcs).toFixed(2))
+
+            tecint = parseFloat(tecint).toFixed(2)
+            tc = parseFloat(tc).toFixed(2)
+            tf = parseFloat(tf).toFixed(2)
+            tsint = parseFloat(tsint).toFixed(2)
+            tis = parseFloat(tis).toFixed(2)
+            tfs = parseFloat(tfs).toFixed(2)
+            tcs = parseFloat(tcs).toFixed(2)
+            tl = parseFloat(tl).toFixed(2)
+
+            console.log(typeof tecint, typeof tc, typeof tf, typeof tis, typeof tfs, typeof tcs, typeof tl)
+
             tabela.push({id: experimento, tecint, tc, tf, tsint, tis, tfs, tcs, tl})
 
-            tfs_antes = tfs
-            tc_antes = tc
-
-            i = i + tcs
-            experimento = experimento + 1
+            i = parseFloat(i) + parseFloat(tcs)
+            experimento = parseInt(experimento) + 1
 
         }
 
         setDados(tabela)
-
-        console.log(tabela)
-        // alert('Acho que vou ficar aqui mesmo');
+        setTemposMediosNaFila(tmfila)
+        setProbabilidadesDeOperadoresLivre(tmservico)
+        setTempoMedioNoSistema(tmsistema)
+        setTemposMediosDeServico(tmservico)
+        setNumeroExperimentos(parseInt(experimento))
     }
 
     function handleChangeTipoTEC(value) {
@@ -97,27 +120,27 @@ export default function MainPage() {
     }
 
     function handleChangeTEC(value) {
-        setTEC(value);
+        setTEC(parseFloat(value));
     }
 
     function handleChangeMediaTEC(value) {
-        setMediaTEC(value);
+        setMediaTEC(parseFloat(value));
     }
 
     function handleChangeVarianciaTEC(value) {
-        setVarianciaTEC(value);
+        setVarianciaTEC(parseFloat(value));
     }
 
     function handleChangeTS(value) {
-        setTS(value);
+        setTS(parseFloat(value));
     }
 
     function handleChangeMediaTS(value) {
-        setMediaTS(value);
+        setMediaTS(parseFloat(value));
     }
 
     function handleChangeVarianciaTS(value) {
-        setVarianciaTS(value);
+        setVarianciaTS(parseFloat(value));
     }
     
     return (
@@ -161,7 +184,7 @@ export default function MainPage() {
                             />
                         </div>
                     }
-                    {tipoTec === "normal" &&
+                    {tipoTec === "exponencial" &&
                         <div>
                             <label>Média</label>
                             <input
@@ -172,7 +195,7 @@ export default function MainPage() {
                             onChange={e => handleChangeMediaTEC(e.target.value)}/>
                         </div>
                     }
-                    {tipoTec === "exponencial" &&
+                    {tipoTec === "normal" &&
                     <div>
                         <div>
                             <label>Média</label>
@@ -222,7 +245,7 @@ export default function MainPage() {
                             onChange={e => handleChangeTS(e.target.value)}/>
                         </div>
                     }
-                    {tipoTs === "normal" &&
+                    {tipoTs === "exponencial" &&
                         <div>
                             <label>Média</label>
                             <input
@@ -232,7 +255,7 @@ export default function MainPage() {
                             onChange={e => handleChangeMediaTS(e.target.value)}/>
                         </div>
                     }
-                    {tipoTs === "exponencial" &&
+                    {tipoTs === "normal" &&
                     <div>
                         <div>
                             <label>Média</label>
@@ -265,27 +288,75 @@ export default function MainPage() {
 
             <div className={styles.statistics}>
                 <div className={styles.charts}>
-                    <div className={styles.chart1}>Gráfico<Chart data={dados}/></div>
-                    <div className={styles.chart2}>Gráfico<Chart data={dados}/></div>
-                    <div className={styles.chart3}>Gráfico<Chart data={dados}/></div>
-                    <div className={styles.chart4}>Gráfico<Chart data={dados}/></div>
+                    <div className={styles.chart1}>
+                        <div className={styles.chartLabels}>
+                            Tempo do Operador Livre (experimentos x minutos)
+                        </div>
+                        <Chart 
+                            options={barOptions} 
+                            type="bar"
+                            width="100%"
+                            height="400"
+                            series={[{ data: probabilidadesDeOperadoresLivre  }]}
+                        />
+
+                    </div>
+                    <div className={styles.chart2}>
+                        <div className={styles.chartLabels}>
+                            Tempo de Serviço (experimentos x minutos)
+                        </div>
+                        <Chart 
+                            options={barOptions} 
+                            type="bar"
+                            width="100%"
+                            height="400"
+                            series={[{ data: temposMediosDeServico  }]}
+
+                        />
+                    </div>
+                    <div className={styles.chart3}>
+                        <div className={styles.chartLabels}>
+                            Tempo na Fila (experimentos x minutos)
+                        </div>
+                        <Chart 
+                            options={barOptions} 
+                            type="bar"
+                            width="100%"
+                            height="400"
+                            series={[{ data: temposMediosNafila  }]}
+                        />
+                    </div>
+
+                    <div className={styles.chart4}>
+                        <div className={styles.chartLabels}>
+                            Tempo do Cliente no Sistema (experimentos x minutos)
+                        </div>
+                        <Chart 
+                            options={barOptions} 
+                            type="bar"
+                            width="100%"
+                            height="400"
+                            series={[{ data: tempoMedioNoSistema  }]}
+                        />
+                    </div>
+                    
                 </div>
                 <div className={styles.tableContainer}>
-                    Tabela de Simulação
+                   
                     <div className={styles.table}>
                         <div className={styles.tableContainerGrid}>
                             <DataGrid 
                             rows={dados} 
                             columns={[
                                 { field: 'id', headerName: 'Experimento', width: 120 },
-                                { field: 'tecint', headerName: 'Tempo entre chegadas', width: 150 },
-                                { field: 'tc', headerName: 'Tempo de chegada no relogio', width: 150 },
-                                { field: 'tf', headerName: 'Tempo de fila', width: 150 },
-                                { field: 'tsint', headerName: 'Tempo de serviço', width: 150 },
-                                { field: 'tis', headerName: 'Tempo inicial do serviço no relogio', width: 150 },
-                                { field: 'tfs', headerName: 'Tempo final do serviço no relogio', width: 150 },
-                                { field: 'tcs', headerName: 'Tempo do cliente no sistema', width: 150 },
-                                { field: 'tl', headerName: 'Tempo livre do operador', width: 150 },
+                                { field: 'tecint', headerName: 'T entre chegadas', width: 150 },
+                                { field: 'tc', headerName: 'T chegada no relogio', width: 150 },
+                                { field: 'tf', headerName: 'T de fila', width: 100 },
+                                { field: 'tsint', headerName: 'T de serviço', width: 110 },
+                                { field: 'tis', headerName: 'T inicial do serviço no relogio', width: 170 },
+                                { field: 'tfs', headerName: 'T final do serviço no relogio', width: 170 },
+                                { field: 'tcs', headerName: 'T do cliente no sistema', width: 160 },
+                                { field: 'tl', headerName: 'T livre do operador', width: 150 },
                             ]}
                             headerHeight={100}
                             />
@@ -295,7 +366,7 @@ export default function MainPage() {
             </div>
             
             <div className={styles.footer}>
-                Desenvolvido por Lorena e Victor Hugo
+                Desenvolvido por <a href="https://github.com/lorenaelias/"> Lorena </a> e Victor Hugo
             </div>
         
         </div>

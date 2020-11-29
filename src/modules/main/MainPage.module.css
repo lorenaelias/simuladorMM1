@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Limelight&display=swap');
+
 .gridContainer {
-    background-color: #f8eee7;
+    background-color: white;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 0.2fr 0.6fr 2.1fr 0.1fr;
+    grid-template-rows: 0.1fr 0.6fr 2.1fr 0.05fr;
     gap: 5px 5px;
     grid-template-areas:
         "header"
@@ -21,14 +23,16 @@
     align-items: center;
     justify-content: center;
     align-content: center;
-    background: #94618e;
-    color:#defe47;
+    background: #495057;
+    color: white;
     font-weight: 700;
-    font-size: x-large;
+    font-size: 40px;
+    font-family: 'Limelight', cursive;
 }
 
 .params {
     padding: 1rem;
+    margin-top: 70px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
@@ -59,16 +63,16 @@ label {
     margin-left: 15px;
     display: inline-block;
     width: 220px;
-    color: #0e0b16;
 }
 
 input, select {
     background-color: white;
-    border: 2px solid #defe47;
+    border: 1px solid #1198cd;
     border-radius: 5px;
+    color: #495057;
 
     width: 50%;
-    padding: 15px 20px;
+    padding: 10px 20px;
     box-sizing: border-box;
 }
 
@@ -79,8 +83,8 @@ input[type="submit"] {
     margin-top: 20px;
     display: flex;
 
-    background-color: #94618e;
-    color: #e7dfdd;
+    background-color: #4281a4;
+    color: white;
     padding: 12px 20px;
     border: none;
     border-radius: 4px;
@@ -89,8 +93,11 @@ input[type="submit"] {
 }
   
 input[type=submit]:hover {
-    background-color: #defe47;
-    color: black;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    color: white;
+    border-color: #2198ab;
+    background-color: #1198cd;
+    box-shadow: #495057;
 }
 
 .labelSimulacao {
@@ -165,6 +172,13 @@ input[type=submit]:hover {
     grid-area: chart4;
 }
 
+.chartLabels {
+    font-size: 15px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: grey;
+}
+
 .tableContainer {
     grid-area: table;
     /* padding: 1rem; */
@@ -181,6 +195,15 @@ input[type=submit]:hover {
     margin-top: 1rem;
 }
 
+.dx-datagrid .dx-row-alt > td {
+    background-color: yellow;
+  }
+
+.MuiDataGrid-columnsContainer {
+    background-color: #17a9b2a2 !important;
+    z-index: 0 !important;
+}
+
 .footer {
     grid-area: footer;
     z-index: 2;
@@ -190,8 +213,14 @@ input[type=submit]:hover {
     align-items: center;
     justify-content: center;
     align-content: center;
-    background: #94618e;
-    color:#defe47;
+    background: #495057;
+    color: white;
     font-weight: 700;
     font-size: medium;
+}
+
+a {
+    margin: 5px;
+    text-decoration: none;
+    color:  white;
 }
