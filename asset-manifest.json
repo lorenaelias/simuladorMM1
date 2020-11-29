@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/simuladorMM1/static/css/main.b64f9971.chunk.css",
+    "main.js": "/simuladorMM1/static/js/main.72319d7c.chunk.js",
+    "main.js.map": "/simuladorMM1/static/js/main.72319d7c.chunk.js.map",
+    "runtime-main.js": "/simuladorMM1/static/js/runtime-main.f9941cda.js",
+    "runtime-main.js.map": "/simuladorMM1/static/js/runtime-main.f9941cda.js.map",
+    "static/css/2.679831fc.chunk.css": "/simuladorMM1/static/css/2.679831fc.chunk.css",
+    "static/js/2.46c00c1a.chunk.js": "/simuladorMM1/static/js/2.46c00c1a.chunk.js",
+    "static/js/2.46c00c1a.chunk.js.map": "/simuladorMM1/static/js/2.46c00c1a.chunk.js.map",
+    "static/js/3.2b1e945b.chunk.js": "/simuladorMM1/static/js/3.2b1e945b.chunk.js",
+    "static/js/3.2b1e945b.chunk.js.map": "/simuladorMM1/static/js/3.2b1e945b.chunk.js.map",
+    "index.html": "/simuladorMM1/index.html",
+    "static/css/2.679831fc.chunk.css.map": "/simuladorMM1/static/css/2.679831fc.chunk.css.map",
+    "static/css/main.b64f9971.chunk.css.map": "/simuladorMM1/static/css/main.b64f9971.chunk.css.map",
+    "static/js/2.46c00c1a.chunk.js.LICENSE.txt": "/simuladorMM1/static/js/2.46c00c1a.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f9941cda.js",
+    "static/css/2.679831fc.chunk.css",
+    "static/js/2.46c00c1a.chunk.js",
+    "static/css/main.b64f9971.chunk.css",
+    "static/js/main.72319d7c.chunk.js"
+  ]
+}
