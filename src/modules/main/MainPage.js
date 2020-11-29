@@ -3,6 +3,7 @@ import styles from './MainPage.module.css';
 import { DataGrid } from '@material-ui/data-grid';
 import Chart from 'react-apexcharts';
 import { barOptions } from './chart-options';
+import { exponencialRAND, normalRAND } from '../../services/randomVar';
 
 export default function MainPage() {
     const [tempoSim, setTempo] = useState(0);
