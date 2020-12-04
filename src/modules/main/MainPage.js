@@ -4,6 +4,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Chart from 'react-apexcharts';
 import { barOptions } from './chart-options';
 import { exponencialRAND, normalRAND } from '../../services/randomVar';
+import { tmFila, probEsperar, probOperadorLivre, tmSvc, tmSistema } from '../../services/statistics';
 
 export default function MainPage() {
     const [tempoSim, setTempo] = useState(0);
@@ -18,11 +19,17 @@ export default function MainPage() {
     const [mediaTS, setMediaTS] = useState(0);
     const [varianciaTS, setVarianciaTS] = useState(0);
 
-    const [temposMediosNafila, setTemposMediosNaFila] = useState([]);
-    const [temposMediosDeServico, setTemposMediosDeServico] = useState([]);
-    const [probabilidadesDeOperadoresLivre, setProbabilidadesDeOperadoresLivre] = useState([]);
-    const [tempoMedioNoSistema, setTempoMedioNoSistema] = useState([]);
+    const [temposNafila, setTemposNaFila] = useState([]);
+    const [temposDeServico, setTemposDeServico] = useState([]);
+    const [tempoDeOperadoresLivre, setOperadoresLivre] = useState([]);
+    const [tempoNoSistema, setTempoNoSistema] = useState([]);
     const [numeroExperimentos, setNumeroExperimentos] = useState(0);
+
+    const [tmDeFila, setTmDeFila] = useState(0);
+    const [probDeEsperar, setProbDeEsperar] = useState(0);
+    const [probDeOperadorLivre, setProbDeOperadorLivre] = useState(0);
+    const [tmDeServico, setTmDeServico] = useState(0);
+    const [tmNoSistema, setTmNoSistema] = useState(0);
 
     const [dados, setDados] = useState([]);
 
@@ -105,11 +112,17 @@ export default function MainPage() {
         }
 
         setDados(tabela)
-        setTemposMediosNaFila(tmfila)
-        setProbabilidadesDeOperadoresLivre(tmservico)
-        setTempoMedioNoSistema(tmsistema)
-        setTemposMediosDeServico(tmservico)
+        setTemposNaFila(tmfila)
+        setOperadoresLivre(problivre)
+        setTempoNoSistema(tmsistema)
+        setTemposDeServico(tmservico)
         setNumeroExperimentos(parseInt(experimento))
+
+        setTmDeFila(tmFila(tmfila));
+        setProbDeEsperar(probEsperar(tmfila));
+        setProbDeOperadorLivre(probOperadorLivre(problivre, tempoSim));
+        setTmDeServico(tmSvc(tmservico));
+        setTmNoSistema(tmSistema(tmsistema));
     }
 
     function handleChangeTipoTEC(value) {
@@ -153,6 +166,7 @@ export default function MainPage() {
                     <label className={styles.labelSimulacao}>Tempo de Simulação</label>
                     <input 
                     placeholder="em minutos"
+                    type="number"
                     className={styles.tempoSimulacao} 
                     id="tempoSim" value={tempoSim} 
                     onChange={e => setTempo(e.target.value)} 
@@ -180,7 +194,7 @@ export default function MainPage() {
                             type="number"
                             min="1"
                             max="999"
-                            placeholder="em minutos" 
+                            placeholder="(tempo em minutos)" 
                             onChange={e => handleChangeTEC(e.target.value)}
                             />
                         </div>
@@ -192,7 +206,7 @@ export default function MainPage() {
                             className={styles.colInput}
                             type="number"
                             step="0.01"
-                            placeholder="tempo em minutos" 
+                            placeholder="(em minutos)" 
                             onChange={e => handleChangeMediaTEC(e.target.value)}/>
                         </div>
                     }
@@ -205,7 +219,7 @@ export default function MainPage() {
                             type="number"
                             step="0.01"
                             id="mediaexp"
-                            placeholder="tempo em minutos" 
+                            placeholder="(em minutos)" 
                             onChange={e => handleChangeMediaTEC(e.target.value)}/>
                         </div>
 
@@ -216,7 +230,7 @@ export default function MainPage() {
                             type="number"
                             step="0.01"
                             id="stdexp"
-                            placeholder="tempo em minutos" 
+                            placeholder="(em minutos)" 
                             onChange={e => handleChangeVarianciaTEC(e.target.value)}/>
                         </div>
                     </div>
@@ -242,7 +256,7 @@ export default function MainPage() {
                             type="number"
                             min="1"
                             max="999"
-                            placeholder="em minutos" 
+                            placeholder="(tempo em minutos)" 
                             onChange={e => handleChangeTS(e.target.value)}/>
                         </div>
                     }
@@ -252,7 +266,7 @@ export default function MainPage() {
                             <input
                             className={styles.colInput}
                             type="number"
-                            placeholder="tempo em minutos" 
+                            placeholder="(em minutos)" 
                             onChange={e => handleChangeMediaTS(e.target.value)}/>
                         </div>
                     }
@@ -264,7 +278,7 @@ export default function MainPage() {
                             className={styles.colInput}
                             type="number"
                             id="mediaexp"
-                            placeholder="tempo em minutos" 
+                            placeholder="(em minutos)" 
                             onChange={e => handleChangeMediaTS(e.target.value)}/>
                         </div>
 
@@ -275,7 +289,7 @@ export default function MainPage() {
                             type="number"
                             step="0.01"
                             id="stdexp"
-                            placeholder="tempo em minutos"
+                            placeholder="(em minutos)"
                             onChange={e => handleChangeVarianciaTS(e.target.value)} />
                         </div>
                     </div>
@@ -298,7 +312,7 @@ export default function MainPage() {
                             type="bar"
                             width="100%"
                             height="400"
-                            series={[{ data: probabilidadesDeOperadoresLivre  }]}
+                            series={[{ data: tempoDeOperadoresLivre  }]}
                         />
 
                     </div>
@@ -311,7 +325,7 @@ export default function MainPage() {
                             type="bar"
                             width="100%"
                             height="400"
-                            series={[{ data: temposMediosDeServico  }]}
+                            series={[{ data: temposDeServico  }]}
 
                         />
                     </div>
@@ -324,7 +338,7 @@ export default function MainPage() {
                             type="bar"
                             width="100%"
                             height="400"
-                            series={[{ data: temposMediosNafila  }]}
+                            series={[{ data: temposNafila  }]}
                         />
                     </div>
 
@@ -337,13 +351,19 @@ export default function MainPage() {
                             type="bar"
                             width="100%"
                             height="400"
-                            series={[{ data: tempoMedioNoSistema  }]}
+                            series={[{ data: tempoNoSistema  }]}
                         />
                     </div>
                     
                 </div>
                 <div className={styles.tableContainer}>
-                   
+                    <div className={styles.stats}>
+                        <div>Tempo médio de espera na fila = {tmDeFila} minutos</div>
+                        <div>Tempo médio de serviço = {tmDeServico} minutos</div>
+                        <div>Tempo médio de cada experimento no sistema = {tmNoSistema} minutos</div>
+                        <div>Probabilidade de esperar na fila = {probDeEsperar}</div>
+                        <div>Probabilidade do operador estar livre = {probDeOperadorLivre}</div>
+                    </div>
                     <div className={styles.table}>
                         <div className={styles.tableContainerGrid}>
                             <DataGrid 
